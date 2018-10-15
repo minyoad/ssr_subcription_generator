@@ -16,7 +16,9 @@ def base64_encode(str):
 def jsonconfigs2SSR(jsonConfigs):
     ssr_list=[]
 
-    for jsonConfig in jsonConfigs:        
+    for jsonConfig in jsonConfigs: 
+        # config content
+        # {       
 		# 	"remarks" : "aabite",
 		# 	"id" : "A0E5360C67576B63CFB07114085F6E33",
 		# 	"server" : "aabite.com",
@@ -37,7 +39,7 @@ def jsonconfigs2SSR(jsonConfigs):
         obfsparams=['obfsparam','protocolparam','remarks','group']
         obfsparams_base64=[]
         for obfsparam in obfsparams:
-            print(jsonConfig[obfsparam])
+            # print(jsonConfig[obfsparam])
             obfsparams_base64.append(obfsparam+'='+(base64_encode(jsonConfig[obfsparam])))
         
         obfsparam="&".join(obfsparams_base64)
@@ -56,31 +58,30 @@ def jsonconfigs2SSR(jsonConfigs):
     return ssr_list
 if __name__ == "__main__":
 
+    #load configs from gui-config.json    
     f = open("gui-config.json", "r")
     json_content=f.read()
     # print(json_content)
 
     jsonAll=json.loads(json_content)
 
+    #get ssr:// list
     ssrlist=jsonconfigs2SSR(jsonAll['configs'])
 
     print(ssrlist)
-    # r = requests.post("https://www.ssrtool.com/tool/api/SSR_JsonToSSR",data={"json_content":json_content})
-    # print(r.text)
+    
     ssr_content='\n'.join(ssrlist)
 
+    #convert to base64 string
     ssr_content_base64=base64_encode(ssr_content)
     print(ssr_content_base64)
-    # ssr_content=r.text.replace("\"","").replace(",","\n").replace("[","").replace("]","")
-    # r2 = requests.post("https://www.ssrtool.com/tool/api/enBase64",data={"content":ssr_content})
-    # print(r2.text)
-    # resJson=r2.json()
+
+    #save to ssr.txt
     fssr=open("ssr.txt","w")
-    # fssr.write(resJson["data"])
     fssr.write(ssr_content_base64)
 
     fssr.close()
-    
+
     print("Generate finished.")
        
 
